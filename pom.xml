@@ -9,13 +9,13 @@
     <packaging>jar</packaging>
     <version>1.2</version>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Test Automation framework which allows tests to be written within a DevOps platform.
+    <description>com.usmanHussain - Test Automation framework which allows tests to be written within a DevOps platform.
         Designed, Developed and Implemented by Mr Usman H Hussain
     </description>
     <url>https://github.com/usman-h/TestAutomationFramework</url>
 
     <properties>
-        <sonar.projectName>Usman Hussain Test Automation Framework</sonar.projectName>
+        <sonar.projectName>Usman Hussain - com.usmanHussain Test Automation Framework</sonar.projectName>
         <sonar.language>java</sonar.language>
         <custom.folder>config</custom.folder>
         <surefire.fork.count>1</surefire.fork.count>
