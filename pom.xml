@@ -7,7 +7,7 @@
     <groupId>com.usmanHussain</groupId>
     <artifactId>UsmanHussainFramework</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>com.usmanHussain - Test Automation framework which allows tests to be written within a DevOps platform.
         Designed, Developed and Implemented by Mr Usman H Hussain
