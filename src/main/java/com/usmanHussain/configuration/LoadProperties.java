@@ -1,4 +1,4 @@
-package com.usmanHussain.configuration;
+package com.usmanhussain.configuration;
 
 import org.slf4j.LoggerFactory;
 

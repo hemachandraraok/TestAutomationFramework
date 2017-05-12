@@ -1,4 +1,4 @@
-package com.usmanHussain;
+package com.usmanhussain;
 
 import java.io.StringWriter;
 

@@ -1,4 +1,4 @@
-package com.usmanHussain.framework;
+package com.usmanhussain.framework;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

@@ -1,8 +1,8 @@
-package com.usmanHussain.framework;
+package com.usmanhussain.framework;
 
 import com.saucelabs.ci.sauceconnect.SauceConnectFourManager;
 import com.saucelabs.ci.sauceconnect.SauceTunnelManager;
-import com.usmanHussain.configuration.SystemProperties;
+import com.usmanhussain.configuration.SystemProperties;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;

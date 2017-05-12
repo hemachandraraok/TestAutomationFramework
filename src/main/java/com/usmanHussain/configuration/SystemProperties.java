@@ -1,4 +1,4 @@
-package com.usmanHussain.configuration;
+package com.usmanhussain.configuration;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;

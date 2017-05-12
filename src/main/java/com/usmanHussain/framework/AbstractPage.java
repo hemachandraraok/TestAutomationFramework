@@ -1,7 +1,7 @@
-package com.usmanHussain.framework;
+package com.usmanhussain.framework;
 
 import com.google.common.base.Function;
-import com.usmanHussain.exception.PageOperationException;
+import com.usmanhussain.exception.PageOperationException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;

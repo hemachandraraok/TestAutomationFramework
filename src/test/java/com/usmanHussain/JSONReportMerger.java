@@ -1,4 +1,4 @@
-package com.usmanHussain;
+package com.usmanhussain;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;

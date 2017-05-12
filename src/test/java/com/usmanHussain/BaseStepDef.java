@@ -1,6 +1,6 @@
-package com.usmanHussain;
+package com.usmanhussain;
 
-import com.usmanHussain.framework.WebDriverDiscovery;
+import com.usmanhussain.framework.WebDriverDiscovery;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
-package com.usmanHussain.hooks;
+package com.usmanhussain.hooks;
 
-import com.usmanHussain.BaseStepDef;
+import com.usmanhussain.BaseStepDef;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
