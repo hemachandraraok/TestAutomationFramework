@@ -4,15 +4,37 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.usmanHussain</groupId>
+    <groupId>com.usmanhussain</groupId>
     <artifactId>UsmanHussainFramework</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0-SNAPSHOT</version>
-    <name>${project.groupId}:${project.artifactId}</name>
-    <description>com.usmanHussain - Test Automation framework which allows tests to be written within a DevOps platform.
+    <version>1.0.0</version>
+    <name>com.usmanhussain:UsmanHussainFramework</name>
+    <description>com.usmanhussain - Test Automation framework which allows tests to be written within a DevOps platform.
         Designed, Developed and Implemented by Mr Usman H Hussain
     </description>
     <url>https://github.com/usman-h/TestAutomationFramework</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Usman H Hussain</name>
+            <email>usman-h@hotmail.co.uk</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/usman-h/TestAutomationFramework.git</connection>
+        <developerConnection>scm:git:git@github.com:usman-h/TestAutomationFramework.git</developerConnection>
+        <url>git://github.com/usman-h/TestAutomationFramework</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <distributionManagement>
         <snapshotRepository>
@@ -26,7 +48,7 @@
     </distributionManagement>
 
     <properties>
-        <sonar.projectName>Usman Hussain - com.usmanHussain Test Automation Framework</sonar.projectName>
+        <sonar.projectName>Usman Hussain - com.usmanhussain Test Automation Framework</sonar.projectName>
         <sonar.language>java</sonar.language>
         <custom.folder>config</custom.folder>
         <surefire.fork.count>1</surefire.fork.count>
@@ -56,21 +78,6 @@
         <cucumber.opts>--tags @wip</cucumber.opts>
         <cucumber.parallel.opts>"@wip"</cucumber.parallel.opts>
     </properties>
-
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <scm>
-        <connection>scm:git:git://github.com/usman-h/TestAutomationFramework.git</connection>
-        <developerConnection>scm:git:git@github.com:usman-h/TestAutomationFramework.git</developerConnection>
-        <url>git://github.com/usman-h/TestAutomationFramework</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <build>
         <plugins>
