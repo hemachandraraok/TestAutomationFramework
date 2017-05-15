@@ -7,7 +7,7 @@
     <groupId>com.usmanhussain</groupId>
     <artifactId>UsmanHussainFramework</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <name>com.usmanhussain:UsmanHussainFramework</name>
     <description>com.usmanhussain - Test Automation framework which allows tests to be written within a DevOps platform.
         Designed, Developed and Implemented by Mr Usman H Hussain
@@ -43,7 +43,8 @@
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+            <url>https://oss.sonatype.org/</url>
         </repository>
     </distributionManagement>
 
