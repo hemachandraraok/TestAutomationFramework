@@ -25,7 +25,7 @@
     <groupId>com.usmanhussain</groupId>
     <artifactId>UsmanHussainFramework</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <name>com.usmanhussain:UsmanHussainFramework</name>
     <description>com.usmanhussain - Test Automation framework which allows tests to be written within a DevOps platform.
         Designed, Developed and Implemented by Mr Usman H Hussain
@@ -93,7 +93,6 @@
         <applitools.version>2.56</applitools.version>
         <logback.version>1.1.7</logback.version>
         <cucumber.jvm.parallel.version>1.2.1</cucumber.jvm.parallel.version>
-        <wiremock.version>1.58</wiremock.version>
         <maven.checkstyle.plugin.version>2.17</maven.checkstyle.plugin.version>
         <checkstyle.version>6.19</checkstyle.version>
         <acceptance.tests.in.parallel>2</acceptance.tests.in.parallel>
@@ -200,6 +199,12 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-support</artifactId>
             <version>${selenium.webdriver.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>selenium</artifactId>
+            <version>1.2.1</version>
         </dependency>
 
         <dependency>
@@ -460,6 +465,12 @@
             <groupId>com.saucelabs</groupId>
             <artifactId>ci-sauce</artifactId>
             <version>1.123</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.lightbody.bmp</groupId>
+            <artifactId>browsermob-core-littleproxy</artifactId>
+            <version>2.1.0-beta-3</version>
         </dependency>
     </dependencies>
 

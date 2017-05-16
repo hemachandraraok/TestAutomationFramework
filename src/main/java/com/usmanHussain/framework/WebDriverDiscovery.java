@@ -1,6 +1,11 @@
 package com.usmanhussain.framework;
 
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
+import net.lightbody.bmp.proxy.CaptureType;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -8,17 +13,23 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.testcontainers.containers.BrowserWebDriverContainer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
+
 public class WebDriverDiscovery extends EventFiringWebDriver {
 
     public static RemoteWebDriver remoteWebDriver = setDriver();
+    public static BrowserMobProxy server;
 
     public WebDriverDiscovery() {
         super(remoteWebDriver);
@@ -29,6 +40,10 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
     }
 
     private static RemoteWebDriver setDriver() {
+        server = new BrowserMobProxyServer();
+        server.enableHarCaptureTypes(CaptureType.getRequestCaptureTypes());
+        server.enableHarCaptureTypes(CaptureType.getResponseCaptureTypes());
+        server.start();
         switch (System.getProperty("driverType")) {
             case "firefox":
                 return new FirefoxDriver();
@@ -43,18 +58,30 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
                 } else {
                     return new SauceLabsDriver(getPlatform(), getBrowserName(), getBrowserVersion());
                 }
+            case "docker":
+                try {
+                    return new BrowserWebDriverContainer()
+                            .withDesiredCapabilities(DesiredCapabilities.chrome())
+                            .withRecordingMode(RECORD_ALL, new File("target")).getWebDriver();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
             default:
+                Proxy seleniumProxy = ClientUtil.createSeleniumProxy(server);
                 ArrayList<String> cliArgsCap = new ArrayList<String>();
                 DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
                 cliArgsCap.add("--web-security=false");
                 cliArgsCap.add("--ssl-protocol=any");
                 cliArgsCap.add("--ignore-ssl-errors=true");
-                capabilities.setCapability("takesScreenshot", true);
+                //capabilities.setCapability("takesScreenshot", true);
+                capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
                 capabilities.setCapability(
                         PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArgsCap);
                 capabilities.setCapability(
                         PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS,
-                        new String[] { "--logLevel=2" });
+                        new String[]{"--logLevel=2"});
                 return new PhantomJSDriver(capabilities);
         }
     }
@@ -152,5 +179,4 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
     public Options manage() {
         return null;
     }
-
 }
