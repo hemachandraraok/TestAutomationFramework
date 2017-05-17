@@ -14,8 +14,8 @@ import java.net.URL;
 
 public class SauceLabsDriver extends RemoteWebDriver {
 
-    private static String sauceUser = "hxdc";
-    private static String key = "7bf2cd70-7391-4b2d-9440-d598313e4615";
+    private static String sauceUser = "USERNAME";
+    private static String key = "ACCESS_KEY";
 
     protected static final Logger LOG = LoggerFactory.getLogger(SauceLabsDriver.class);
     private static final String SAUCELABS_DRIVER_URL = "http://" + sauceUser + ":" + key + "@ondemand.saucelabs.com:80/wd/hub";
