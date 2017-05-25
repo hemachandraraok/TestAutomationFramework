@@ -20,7 +20,7 @@ public abstract class AbstractPage {
 
     public static RemoteWebDriver getDriver;
 
-    private static final int DRIVER_WAIT_TIME = 10;
+    private static final int DRIVER_WAIT_TIME = 15;
 
     private static final int debugWait = 1000;
 
