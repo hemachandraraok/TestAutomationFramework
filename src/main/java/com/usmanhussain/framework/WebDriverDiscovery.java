@@ -75,13 +75,11 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
                 cliArgsCap.add("--web-security=false");
                 cliArgsCap.add("--ssl-protocol=any");
                 cliArgsCap.add("--ignore-ssl-errors=true");
+                cliArgsCap.add("--webdriver-loglevel="+System.getProperty("logLevel"));
                 //capabilities.setCapability("takesScreenshot", true);
                 capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
                 capabilities.setCapability(
                         PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArgsCap);
-                capabilities.setCapability(
-                        PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS,
-                        new String[]{"--logLevel=2"});
                 return new PhantomJSDriver(capabilities);
         }
     }
