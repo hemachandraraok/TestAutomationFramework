@@ -4,15 +4,15 @@ import com.google.common.base.Function;
 import com.usmanhussain.exception.PageOperationException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractPage {
 
@@ -198,6 +198,32 @@ public abstract class AbstractPage {
         return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
 
+    public void waitForMoreTime() {
+        try {
+            Thread.sleep(debugWait);
+        } catch (InterruptedException e) {
+            LOG.error(e.getMessage());
+        }
+    }
+
+    public static WebElement findElementUsingFluentWait(final By by, final int timeoutSeconds) {
+        FluentWait<WebDriver> wait = new FluentWait<WebDriver>(getDriver)
+                .withTimeout(timeoutSeconds, TimeUnit.SECONDS)
+                .pollingEvery(500, TimeUnit.MILLISECONDS)
+                .ignoring(NoSuchElementException.class);
+
+        return wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver webDriver) {
+                return getDriver.findElement(by);
+            }
+        });
+    }
+
+    public Boolean waitForElementInVisible(final By by) {
+        Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+    }
+
     public void retryingClick(By by) {
         int attempts = 0;
         while (attempts < 30) {
@@ -258,6 +284,17 @@ public abstract class AbstractPage {
         }
     }
 
+    public boolean elementDisplayed(WebElement wb) {
+        try {
+            if (wb.isDisplayed()) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
     public boolean elementPresent(By by) {
         try {
             ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
@@ -288,6 +325,76 @@ public abstract class AbstractPage {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void closeTabByIndex(int iWindowIndex) {
+        Set<String> handles = getDriver.getWindowHandles();
+        if (handles.size() > iWindowIndex) {
+            String handle = handles.toArray()[iWindowIndex].toString();
+            getDriver.switchTo().window(handle);
+            getDriver.close();
+        }
+    }
+
+    public void switchToWindowByIndex(int iWindowIndex) {
+        Set<String> handles = getDriver.getWindowHandles();
+        if (handles.size() > iWindowIndex) {
+            String handle = handles.toArray()[iWindowIndex].toString();
+            getDriver.switchTo().window(handle);
+        }
+    }
+
+    public void switchToPopUpWindow() {
+        String parentWindowHandler = getDriver.getWindowHandle();
+        String subWindowHandler = null;
+        Set<String> handles = getDriver.getWindowHandles();
+        Iterator<String> iterator = handles.iterator();
+        while (iterator.hasNext()) {
+            subWindowHandler = iterator.next();
+        }
+        getDriver.switchTo().window(subWindowHandler);
+    }
+
+    public void switchToFrameById(WebElement wbFrame) {
+        getDriver.switchTo().frame(wbFrame);
+    }
+
+    public void switchToParentFrame() {
+        getDriver.switchTo().parentFrame();
+    }
+
+    public void switchToFrameByIndex(int i) {
+        getDriver.switchTo().frame(i);
+    }
+
+    public void switchToDefault() {
+        getDriver.switchTo().defaultContent();
+    }
+
+    public void switchToLastOpenWindow() {
+        Set<String> handles = getDriver.getWindowHandles();
+        if (handles.size() > 0) {
+            String handle = handles.toArray()[handles.size() - 1].toString();
+            getDriver.switchTo().window(handle);
+        }
+    }
+
+    public void btnClick(WebElement btn) {
+        ((JavascriptExecutor) getDriver).executeScript("arguments[0].click();", btn);
+    }
+
+    public void selectDrop(WebElement webSel, String strText) {
+        Select oSelect = new Select(webSel);
+        oSelect.selectByVisibleText(strText);
+    }
+
+    public WebElement findParentNode(WebElement wbChild) {
+        WebElement myParent = (WebElement) executeScript("return arguments[0].parentNode;", wbChild);
+        return myParent;
+    }
+
+    public void navigateBackward() {
+        getDriver.navigate().back();
     }
 
 }
