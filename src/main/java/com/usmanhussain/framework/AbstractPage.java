@@ -55,7 +55,7 @@ public abstract class AbstractPage {
     public WebElement waitForElementPresent(final By by) {
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript("window.onbeforeunload = function(e){};");
             return wait.until(ExpectedConditions.presenceOfElementLocated(by));
         } catch (UnhandledAlertException e) {
             getDriver.switchTo().alert().dismiss();
@@ -69,7 +69,7 @@ public abstract class AbstractPage {
     public WebElement waitForElementPresent(final By by, final By sub_by) {
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript("window.onbeforeunload = function(e){};");
             return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub_by));
         } catch (UnhandledAlertException e) {
             getDriver.switchTo().alert().dismiss();
@@ -82,7 +82,7 @@ public abstract class AbstractPage {
 
     public List<WebElement> waitForElementsPresent(final By by) {
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript("window.onbeforeunload = function(e){};");
             Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME, 100);
             wait.until(ExpectedConditions.elementToBeClickable(by));
             return findElements(by);
@@ -92,37 +92,37 @@ public abstract class AbstractPage {
     }
 
     public WebElement waitForElementToBeClickableAndReturnElement(final By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME, 100);
         wait.until(ExpectedConditions.elementToBeClickable(by));
         return getDriver.findElement(by);
     }
 
     public WebElement waitForExpectedElement(final By by, int timeout) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
         Wait<WebDriver> wait = new WebDriverWait(getDriver, timeout);
         wait.until(visibilityOfElementLocated(by));
         return getDriver.findElement(by);
     }
 
     public WebElement waitAndFindElement(By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
         return waitForExpectedElement(by, 5);
     }
 
     public WebElement findEnabledElement(By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
         return waitForElementPresent(by);
     }
 
     public void waitForElementEnabled(final By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
 
     public WebElement waitForElementVisible(final By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
     }
@@ -144,7 +144,7 @@ public abstract class AbstractPage {
     }
 
     private static Function<WebDriver, WebElement> presenceOfElementLocated(final By locator) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
         return new Function<WebDriver, WebElement>() {
             @Override
             public WebElement apply(WebDriver getDriver) {
@@ -228,7 +228,7 @@ public abstract class AbstractPage {
         int attempts = 0;
         while (attempts < 30) {
             try {
-                ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+                getDriver.executeScript("window.onbeforeunload = function(e){};");
                 getDriver.findElement(by).click();
                 break;
             } catch (Exception e) {
@@ -241,7 +241,7 @@ public abstract class AbstractPage {
         int attempts = 0;
         while (attempts < 50) {
             try {
-                ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+                getDriver.executeScript("window.onbeforeunload = function(e){};");
                 element.click();
                 break;
             } catch (Exception e) {
@@ -253,7 +253,7 @@ public abstract class AbstractPage {
     public Object executeScript(String string, WebElement element) {
         JavascriptExecutor jse = (JavascriptExecutor) getDriver;
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript("window.onbeforeunload = function(e){};");
             return jse.executeScript(string, element);
         } catch (StaleElementReferenceException e) {
             waitForPageLoad();
@@ -262,19 +262,19 @@ public abstract class AbstractPage {
     }
 
     public Object executeScript(String script) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
-        return ((JavascriptExecutor) getDriver).executeScript(script);
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
+        return getDriver.executeScript(script);
     }
 
     public String executeReturnScript(String script) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
-        String imgeJs = ((JavascriptExecutor) getDriver).executeScript(script).toString();
+        getDriver.executeScript("window.onbeforeunload = function(e){};");
+        String imgeJs = getDriver.executeScript(script).toString();
         return imgeJs;
     }
 
     public boolean elementDisplayed(By by) {
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript("window.onbeforeunload = function(e){};");
             Wait<WebDriver> wait = new WebDriverWait(getDriver, 5);
             wait.until(ExpectedConditions.presenceOfElementLocated(by));
             findElement(by);
@@ -297,7 +297,7 @@ public abstract class AbstractPage {
 
     public boolean elementPresent(By by) {
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript("window.onbeforeunload = function(e){};");
             Wait<WebDriver> wait = new WebDriverWait(getDriver, 1);
             wait.until(ExpectedConditions.presenceOfElementLocated(by));
             findElement(by);
@@ -309,7 +309,7 @@ public abstract class AbstractPage {
 
     public boolean elementClickable(By by) {
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript("window.onbeforeunload = function(e){};");
             Wait<WebDriver> wait = new WebDriverWait(getDriver, 1);
             wait.until(ExpectedConditions.elementToBeClickable(by));
             findElement(by);
@@ -380,7 +380,7 @@ public abstract class AbstractPage {
     }
 
     public void btnClick(WebElement btn) {
-        ((JavascriptExecutor) getDriver).executeScript("arguments[0].click();", btn);
+        getDriver.executeScript("arguments[0].click();", btn);
     }
 
     public void selectDrop(WebElement webSel, String strText) {

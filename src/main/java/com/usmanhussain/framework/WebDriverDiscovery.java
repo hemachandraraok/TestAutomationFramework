@@ -12,8 +12,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -71,16 +69,11 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
             default:
                 Proxy seleniumProxy = ClientUtil.createSeleniumProxy(server);
                 ArrayList<String> cliArgsCap = new ArrayList<String>();
-                DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
                 cliArgsCap.add("--web-security=false");
                 cliArgsCap.add("--ssl-protocol=any");
                 cliArgsCap.add("--ignore-ssl-errors=true");
-                cliArgsCap.add("--webdriver-loglevel="+System.getProperty("logLevel"));
-                //capabilities.setCapability("takesScreenshot", true);
-                capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
-                capabilities.setCapability(
-                        PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArgsCap);
-                return new PhantomJSDriver(capabilities);
+                cliArgsCap.add("--webdriver-loglevel=" + System.getProperty("logLevel"));
+                return new PhantomJSDriver();
         }
     }
 
