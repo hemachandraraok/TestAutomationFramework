@@ -50,7 +50,6 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
             case "chrome":
                 return new ChromeDriver();
             case "saucelabs":
-                //SauceLabsDriver.startSauceConnect();
                 if (getPlatform().contains("iOS") || getPlatform().contains("android")) {
                     return new SauceLabsDriver(getPlatform(), getBrowserName(), getAppiumVersion(), getDeviceName(), getDeviceOrientation(), getPlatformVersion());
                 } else {
@@ -69,10 +68,10 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
             default:
                 Proxy seleniumProxy = ClientUtil.createSeleniumProxy(server);
                 ArrayList<String> cliArgsCap = new ArrayList<String>();
+                cliArgsCap.add("--webdriver-loglevel=NONE");
                 cliArgsCap.add("--web-security=false");
                 cliArgsCap.add("--ssl-protocol=any");
                 cliArgsCap.add("--ignore-ssl-errors=true");
-                cliArgsCap.add("--webdriver-loglevel=" + System.getProperty("logLevel"));
                 return new PhantomJSDriver();
         }
     }
