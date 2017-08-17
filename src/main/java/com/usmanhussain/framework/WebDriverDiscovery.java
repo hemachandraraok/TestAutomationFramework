@@ -48,7 +48,9 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
             case "ie":
                 return new InternetExplorerDriver();
             case "chrome":
-                return new ChromeDriver();
+                ChromeOptions driverOptions = new ChromeOptions();
+                driverOptions.addArguments("--start-maximized");
+                return new ChromeDriver(driverOptions);
             case "saucelabs":
                 //SauceLabsDriver.startSauceConnect();
                 if (getPlatform().contains("iOS") || getPlatform().contains("android")) {
