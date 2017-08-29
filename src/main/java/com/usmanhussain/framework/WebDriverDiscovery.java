@@ -58,6 +58,12 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
                 } else {
                     return new SauceLabsDriver(getPlatform(), getBrowserName(), getBrowserVersion());
                 }
+            case "fastest":
+                if (getPlatform().contains("iOS") || getPlatform().contains("android")) {
+                    return new FastestDriver(getPlatform(), getBrowserName(), getAppiumVersion(), getDeviceName(), getDeviceOrientation(), getPlatformVersion());
+                } else {
+                    return new FastestDriver(getPlatform(), getBrowserName(), getBrowserVersion(), getFastestUser(), getFastestPassword(), getRequestKey());
+                }
             case "docker":
                 try {
                     return new BrowserWebDriverContainer()
@@ -89,6 +95,18 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
 
     public static String getBrowserName() {
         return System.getProperty("browserName");
+    }
+
+    public static String getFastestUser() {
+        return System.getProperty("fastestUser");
+    }
+
+    public static String getFastestPassword() {
+        return System.getProperty("fastestPassword");
+    }
+
+    public static String getRequestKey() {
+        return System.getProperty("fastestRequestKey");
     }
 
     public static String getAppiumVersion() {
