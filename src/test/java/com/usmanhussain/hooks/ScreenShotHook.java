@@ -18,6 +18,7 @@ public class ScreenShotHook extends BaseStepDef {
      * <p>
      * Takes screen-shot if the scenario fails
      * </p>
+     *
      * @param scenario will be the individual scenario's within the Feature files
      * @throws InterruptedException Exception thrown if there is an interuption within the JVM
      */

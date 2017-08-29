@@ -2,10 +2,8 @@ package com.usmanhussain.framework;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
-import net.lightbody.bmp.client.ClientUtil;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,6 +14,8 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 
 import java.io.File;
@@ -27,8 +27,9 @@ import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordi
 
 public class WebDriverDiscovery extends EventFiringWebDriver {
 
-    public static RemoteWebDriver remoteWebDriver = setDriver();
+    protected static final Logger log = LoggerFactory.getLogger(WebDriverDiscovery.class);
     public static BrowserMobProxy server;
+    public static RemoteWebDriver remoteWebDriver = setDriver();
 
     public WebDriverDiscovery() {
         super(remoteWebDriver);
@@ -70,12 +71,11 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
                             .withDesiredCapabilities(DesiredCapabilities.chrome())
                             .withRecordingMode(RECORD_ALL, new File("target")).getWebDriver();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.warn("context", e);
                     return null;
                 }
 
             default:
-                Proxy seleniumProxy = ClientUtil.createSeleniumProxy(server);
                 ArrayList<String> cliArgsCap = new ArrayList<String>();
                 cliArgsCap.add("--webdriver-loglevel=NONE");
                 cliArgsCap.add("--web-security=false");

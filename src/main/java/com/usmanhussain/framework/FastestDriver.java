@@ -10,7 +10,7 @@ import java.net.URL;
 
 public class FastestDriver extends RemoteWebDriver {
 
-    protected static final Logger LOG = LoggerFactory.getLogger(SauceLabsDriver.class);
+    protected static final Logger logger = LoggerFactory.getLogger(FastestDriver.class);
     private static final String FASTEST_DRIVER_URL = "http://fastest.cognizant.com/wd/hub";
 
     public FastestDriver(String platform, String browserName, String browserVersion, String fastestUser, String key, String requestId) {
@@ -21,7 +21,7 @@ public class FastestDriver extends RemoteWebDriver {
         try {
             return new URL(FASTEST_DRIVER_URL);
         } catch (Exception e) {
-            LOG.warn(e.getMessage());
+            logger.warn("context", e);
         }
         return null;
     }
@@ -40,10 +40,10 @@ public class FastestDriver extends RemoteWebDriver {
             capabilities.setCapability("platform", platform);
             capabilities.setCapability("packagename", buildName);
             capabilities.setCapability("servicerequestid", requestId);
-            System.out.println("capabilities : " + capabilities.asMap().toString());
+            logger.info("capabilities : " + capabilities.asMap().toString());
             return capabilities;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("context", e);
         }
         return null;
     }
