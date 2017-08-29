@@ -9,11 +9,10 @@ import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -50,13 +49,20 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
             case "ie":
                 return new InternetExplorerDriver();
             case "chrome":
-                return new ChromeDriver();
+                ChromeOptions driverOptions = new ChromeOptions();
+                driverOptions.addArguments("--start-maximized");
+                return new ChromeDriver(driverOptions);
             case "saucelabs":
-                //SauceLabsDriver.startSauceConnect();
                 if (getPlatform().contains("iOS") || getPlatform().contains("android")) {
                     return new SauceLabsDriver(getPlatform(), getBrowserName(), getAppiumVersion(), getDeviceName(), getDeviceOrientation(), getPlatformVersion());
                 } else {
                     return new SauceLabsDriver(getPlatform(), getBrowserName(), getBrowserVersion());
+                }
+            case "fastest":
+                if (getPlatform().contains("iOS") || getPlatform().contains("android")) {
+                    return new FastestDriver(getPlatform(), getBrowserName(), getAppiumVersion(), getDeviceName(), getDeviceOrientation(), getPlatformVersion());
+                } else {
+                    return new FastestDriver(getPlatform(), getBrowserName(), getBrowserVersion(), getFastestUser(), getFastestPassword(), getRequestKey());
                 }
             case "docker":
                 try {
@@ -71,16 +77,11 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
             default:
                 Proxy seleniumProxy = ClientUtil.createSeleniumProxy(server);
                 ArrayList<String> cliArgsCap = new ArrayList<String>();
-                DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
+                cliArgsCap.add("--webdriver-loglevel=NONE");
                 cliArgsCap.add("--web-security=false");
                 cliArgsCap.add("--ssl-protocol=any");
                 cliArgsCap.add("--ignore-ssl-errors=true");
-                cliArgsCap.add("--webdriver-loglevel="+System.getProperty("logLevel"));
-                //capabilities.setCapability("takesScreenshot", true);
-                capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
-                capabilities.setCapability(
-                        PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArgsCap);
-                return new PhantomJSDriver(capabilities);
+                return new PhantomJSDriver();
         }
     }
 
@@ -94,6 +95,18 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
 
     public static String getBrowserName() {
         return System.getProperty("browserName");
+    }
+
+    public static String getFastestUser() {
+        return System.getProperty("fastestUser");
+    }
+
+    public static String getFastestPassword() {
+        return System.getProperty("fastestPassword");
+    }
+
+    public static String getRequestKey() {
+        return System.getProperty("fastestRequestKey");
     }
 
     public static String getAppiumVersion() {
