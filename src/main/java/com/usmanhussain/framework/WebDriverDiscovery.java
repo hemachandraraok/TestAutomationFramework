@@ -2,8 +2,10 @@ package com.usmanhussain.framework;
 
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -11,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -44,15 +47,19 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
         server.enableHarCaptureTypes(CaptureType.getRequestCaptureTypes());
         server.enableHarCaptureTypes(CaptureType.getResponseCaptureTypes());
         server.start();
+        Proxy seleniumProxy = ClientUtil.createSeleniumProxy(server);
         switch (System.getProperty("driverType")) {
             case "firefox":
                 return new FirefoxDriver();
             case "ie":
                 return new InternetExplorerDriver();
             case "chrome":
+                DesiredCapabilities capabilities = DesiredCapabilities.chrome();
                 ChromeOptions driverOptions = new ChromeOptions();
                 driverOptions.addArguments("--start-maximized");
-                return new ChromeDriver(driverOptions);
+                capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
+                capabilities.setCapability(ChromeOptions.CAPABILITY, driverOptions);
+                return new ChromeDriver(capabilities);
             case "saucelabs":
                 if (getPlatform().contains("iOS") || getPlatform().contains("android")) {
                     return new SauceLabsDriver(getPlatform(), getBrowserName(), getAppiumVersion(), getDeviceName(), getDeviceOrientation(), getPlatformVersion());
