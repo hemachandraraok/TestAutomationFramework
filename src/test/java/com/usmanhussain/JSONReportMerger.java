@@ -18,14 +18,14 @@ import java.util.UUID;
 
 /**
  * A Cucumber JSON report merger
- *
+ * <p>
  * <p> When running tests in parallel the merger will collate the individual test reports and perform a merge into a single file </p>
  */
 public class JSONReportMerger {
 
+    static Logger log;
     private static String reportFileName = "cucumber.json";
     private static String reportImageExtension = "png";
-    static Logger log;
 
     static {
         log = Logger.getLogger(JSONReportMerger.class);

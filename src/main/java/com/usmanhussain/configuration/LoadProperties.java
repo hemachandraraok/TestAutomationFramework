@@ -23,14 +23,6 @@ public class LoadProperties {
         loadUserConfigProps();
     }
 
-    public String getAdminUser() {
-        return adminUser;
-    }
-
-    public String getAdminUserPassword() {
-        return adminUserPassword;
-    }
-
     /**
      * Calls loadProps() to load the run config properties
      */
@@ -54,7 +46,7 @@ public class LoadProperties {
      * Loads in the properties file
      *
      * @param props Properties being loaded from the file
-     * @param file File declartion that is being used
+     * @param file  File declartion that is being used
      * @throws java.io.IOException IOException is thrown
      */
     public static void loadProps(Properties props, File file) throws IOException {
@@ -81,6 +73,14 @@ public class LoadProperties {
         adminUser = userProps.getProperty("adminUsername");
         adminUserPassword = userProps.getProperty("adminPassword");
         LOG.info("COMPLETED USER SETUP ");
+    }
+
+    public String getAdminUser() {
+        return adminUser;
+    }
+
+    public String getAdminUserPassword() {
+        return adminUserPassword;
     }
 
 }

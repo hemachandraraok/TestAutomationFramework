@@ -14,13 +14,11 @@ import java.net.URL;
 
 public class SauceLabsDriver extends RemoteWebDriver {
 
+    protected static final Logger LOG = LoggerFactory.getLogger(SauceLabsDriver.class);
+    static SauceTunnelManager sauceTunnelManager = new SauceConnectFourManager();
     private static String sauceUser = "USERNAME";
     private static String key = "ACCESS_KEY";
-
-    protected static final Logger LOG = LoggerFactory.getLogger(SauceLabsDriver.class);
     private static final String SAUCELABS_DRIVER_URL = "http://" + sauceUser + ":" + key + "@ondemand.saucelabs.com:80/wd/hub";
-
-    static SauceTunnelManager sauceTunnelManager = new SauceConnectFourManager();
 
     public SauceLabsDriver(String platform, String browserName, String browserVersion) {
         super(createURl(), caps(platform, browserName, browserVersion));

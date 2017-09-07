@@ -4,31 +4,52 @@ import com.google.common.base.Function;
 import com.usmanhussain.exception.PageOperationException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractPage {
 
     protected static final Logger LOG = LoggerFactory.getLogger(AbstractPage.class);
-
-    public static RemoteWebDriver getDriver;
-
     private static final int DRIVER_WAIT_TIME = 15;
-
-    private static final int debugWait = 1000;
-
+    private static final int DEBUG_WAIT = 1000;
+    private static final String ON_BEFORE_UNLOAD = "window.onbeforeunload = function(e){};";
+    private static final String LOG_CONTEXT = "context";
+    public static RemoteWebDriver getDriver;
     public HashMap<String, WebElement> commonElements = new HashMap<>();
 
     public AbstractPage() {
         WebDriverDiscovery webDriverDiscovery = new WebDriverDiscovery();
         getDriver = WebDriverDiscovery.getRemoteWebDriver();
+    }
+
+    private static Function<WebDriver, WebElement> presenceOfElementLocated(final By locator) {
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
+        return new Function<WebDriver, WebElement>() {
+            @Override
+            public WebElement apply(WebDriver getDriver) {
+                return getDriver.findElement(locator);
+            }
+        };
+    }
+
+    public static WebElement findElementUsingFluentWait(final By by, final int timeoutSeconds) {
+        FluentWait<WebDriver> wait = new FluentWait<WebDriver>(getDriver)
+                .withTimeout(timeoutSeconds, TimeUnit.SECONDS)
+                .pollingEvery(500, TimeUnit.MILLISECONDS)
+                .ignoring(NoSuchElementException.class);
+
+        return wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver webDriver) {
+                return getDriver.findElement(by);
+            }
+        });
     }
 
     public void deleteCookies() {
@@ -45,7 +66,7 @@ public abstract class AbstractPage {
 
     public WebElement waitForUnstableElement(By by) {
         try {
-            Thread.sleep(debugWait);
+            Thread.sleep(DEBUG_WAIT);
         } catch (InterruptedException e) {
             LOG.error(e.getMessage());
         }
@@ -55,12 +76,14 @@ public abstract class AbstractPage {
     public WebElement waitForElementPresent(final By by) {
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript(ON_BEFORE_UNLOAD);
             return wait.until(ExpectedConditions.presenceOfElementLocated(by));
         } catch (UnhandledAlertException e) {
+            LOG.info(LOG_CONTEXT, e);
             getDriver.switchTo().alert().dismiss();
             return wait.until(ExpectedConditions.presenceOfElementLocated(by));
         } catch (NoAlertPresentException e) {
+            LOG.info(LOG_CONTEXT, e);
             getDriver.switchTo().alert().dismiss();
             return wait.until(ExpectedConditions.presenceOfElementLocated(by));
         }
@@ -69,12 +92,14 @@ public abstract class AbstractPage {
     public WebElement waitForElementPresent(final By by, final By sub_by) {
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript(ON_BEFORE_UNLOAD);
             return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub_by));
         } catch (UnhandledAlertException e) {
+            LOG.info(LOG_CONTEXT, e);
             getDriver.switchTo().alert().dismiss();
             return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub_by));
         } catch (NoAlertPresentException e) {
+            LOG.info(LOG_CONTEXT, e);
             getDriver.switchTo().alert().dismiss();
             return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub_by));
         }
@@ -82,47 +107,48 @@ public abstract class AbstractPage {
 
     public List<WebElement> waitForElementsPresent(final By by) {
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript(ON_BEFORE_UNLOAD);
             Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME, 100);
             wait.until(ExpectedConditions.elementToBeClickable(by));
             return findElements(by);
         } catch (TimeoutException e) {
+            LOG.info(LOG_CONTEXT, e);
             return findElements(by);
         }
     }
 
     public WebElement waitForElementToBeClickableAndReturnElement(final By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME, 100);
         wait.until(ExpectedConditions.elementToBeClickable(by));
         return getDriver.findElement(by);
     }
 
     public WebElement waitForExpectedElement(final By by, int timeout) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
         Wait<WebDriver> wait = new WebDriverWait(getDriver, timeout);
         wait.until(visibilityOfElementLocated(by));
         return getDriver.findElement(by);
     }
 
     public WebElement waitAndFindElement(By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
         return waitForExpectedElement(by, 5);
     }
 
     public WebElement findEnabledElement(By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
         return waitForElementPresent(by);
     }
 
     public void waitForElementEnabled(final By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
 
     public WebElement waitForElementVisible(final By by) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
     }
@@ -132,23 +158,13 @@ public abstract class AbstractPage {
             @Override
             public WebElement apply(WebDriver driver) {
                 try {
-                    Thread.sleep(debugWait);
+                    Thread.sleep(DEBUG_WAIT);
                 } catch (InterruptedException e) {
                     LOG.error(e.getMessage());
                 }
-                ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+                getDriver.executeScript(ON_BEFORE_UNLOAD);
                 WebElement element = getDriver.findElement(by);
                 return element.isDisplayed() ? element : null;
-            }
-        };
-    }
-
-    private static Function<WebDriver, WebElement> presenceOfElementLocated(final By locator) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
-        return new Function<WebDriver, WebElement>() {
-            @Override
-            public WebElement apply(WebDriver getDriver) {
-                return getDriver.findElement(locator);
             }
         };
     }
@@ -198,14 +214,28 @@ public abstract class AbstractPage {
         return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
 
+    public void waitForMoreTime() {
+        try {
+            Thread.sleep(DEBUG_WAIT);
+        } catch (InterruptedException e) {
+            LOG.error(e.getMessage());
+        }
+    }
+
+    public Boolean waitForElementInVisible(final By by) {
+        Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+    }
+
     public void retryingClick(By by) {
         int attempts = 0;
         while (attempts < 30) {
             try {
-                ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+                getDriver.executeScript(ON_BEFORE_UNLOAD);
                 getDriver.findElement(by).click();
                 break;
             } catch (Exception e) {
+                LOG.error(LOG_CONTEXT, e);
             }
             attempts++;
         }
@@ -215,10 +245,11 @@ public abstract class AbstractPage {
         int attempts = 0;
         while (attempts < 50) {
             try {
-                ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+                getDriver.executeScript(ON_BEFORE_UNLOAD);
                 element.click();
                 break;
             } catch (Exception e) {
+                LOG.error(LOG_CONTEXT, e);
             }
             attempts++;
         }
@@ -227,57 +258,73 @@ public abstract class AbstractPage {
     public Object executeScript(String string, WebElement element) {
         JavascriptExecutor jse = (JavascriptExecutor) getDriver;
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript(ON_BEFORE_UNLOAD);
             return jse.executeScript(string, element);
         } catch (StaleElementReferenceException e) {
+            LOG.warn(LOG_CONTEXT, e);
             waitForPageLoad();
             return jse.executeScript(string, element);
         }
     }
 
     public Object executeScript(String script) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
-        return ((JavascriptExecutor) getDriver).executeScript(script);
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
+        return getDriver.executeScript(script);
     }
 
     public String executeReturnScript(String script) {
-        ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
-        String imgeJs = ((JavascriptExecutor) getDriver).executeScript(script).toString();
+        getDriver.executeScript(ON_BEFORE_UNLOAD);
+        String imgeJs = getDriver.executeScript(script).toString();
         return imgeJs;
     }
 
     public boolean elementDisplayed(By by) {
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript(ON_BEFORE_UNLOAD);
             Wait<WebDriver> wait = new WebDriverWait(getDriver, 5);
             wait.until(ExpectedConditions.presenceOfElementLocated(by));
             findElement(by);
             return true;
         } catch (Exception e) {
+            LOG.info(LOG_CONTEXT, e);
             return false;
         }
     }
 
+    public boolean elementDisplayed(WebElement wb) {
+        try {
+            if (wb.isDisplayed()) {
+                return true;
+            }
+        } catch (Exception e) {
+            LOG.info(LOG_CONTEXT, e);
+            return false;
+        }
+        return true;
+    }
+
     public boolean elementPresent(By by) {
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript(ON_BEFORE_UNLOAD);
             Wait<WebDriver> wait = new WebDriverWait(getDriver, 1);
             wait.until(ExpectedConditions.presenceOfElementLocated(by));
             findElement(by);
             return true;
         } catch (Exception e) {
+            LOG.info(LOG_CONTEXT, e);
             return false;
         }
     }
 
     public boolean elementClickable(By by) {
         try {
-            ((JavascriptExecutor) getDriver).executeScript("window.onbeforeunload = function(e){};");
+            getDriver.executeScript(ON_BEFORE_UNLOAD);
             Wait<WebDriver> wait = new WebDriverWait(getDriver, 1);
             wait.until(ExpectedConditions.elementToBeClickable(by));
             findElement(by);
             return true;
         } catch (Exception e) {
+            LOG.info(LOG_CONTEXT, e);
             return false;
         }
     }
@@ -286,8 +333,78 @@ public abstract class AbstractPage {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.info(LOG_CONTEXT, e);
         }
+    }
+
+    public void closeTabByIndex(int iWindowIndex) {
+        Set<String> handles = getDriver.getWindowHandles();
+        if (handles.size() > iWindowIndex) {
+            String handle = handles.toArray()[iWindowIndex].toString();
+            getDriver.switchTo().window(handle);
+            getDriver.close();
+        }
+    }
+
+    public void switchToWindowByIndex(int iWindowIndex) {
+        Set<String> handles = getDriver.getWindowHandles();
+        if (handles.size() > iWindowIndex) {
+            String handle = handles.toArray()[iWindowIndex].toString();
+            getDriver.switchTo().window(handle);
+        }
+    }
+
+    public void switchToPopUpWindow() {
+        String parentWindowHandler = getDriver.getWindowHandle();
+        String subWindowHandler = null;
+        Set<String> handles = getDriver.getWindowHandles();
+        Iterator<String> iterator = handles.iterator();
+        while (iterator.hasNext()) {
+            subWindowHandler = iterator.next();
+        }
+        getDriver.switchTo().window(subWindowHandler);
+    }
+
+    public void switchToFrameById(WebElement wbFrame) {
+        getDriver.switchTo().frame(wbFrame);
+    }
+
+    public void switchToParentFrame() {
+        getDriver.switchTo().parentFrame();
+    }
+
+    public void switchToFrameByIndex(int i) {
+        getDriver.switchTo().frame(i);
+    }
+
+    public void switchToDefault() {
+        getDriver.switchTo().defaultContent();
+    }
+
+    public void switchToLastOpenWindow() {
+        Set<String> handles = getDriver.getWindowHandles();
+        if (handles.size() > 0) {
+            String handle = handles.toArray()[handles.size() - 1].toString();
+            getDriver.switchTo().window(handle);
+        }
+    }
+
+    public void btnClick(WebElement btn) {
+        getDriver.executeScript("arguments[0].click();", btn);
+    }
+
+    public void selectDrop(WebElement webSel, String strText) {
+        Select oSelect = new Select(webSel);
+        oSelect.selectByVisibleText(strText);
+    }
+
+    public WebElement findParentNode(WebElement wbChild) {
+        WebElement myParent = (WebElement) executeScript("return arguments[0].parentNode;", wbChild);
+        return myParent;
+    }
+
+    public void navigateBackward() {
+        getDriver.navigate().back();
     }
 
 }

@@ -6,10 +6,10 @@ import java.util.Date;
 
 public final class SystemProperties {
 
+    public static final Format formatter = new SimpleDateFormat("dd-M-yyyy hh:mm aaa");
+
     public SystemProperties() {
     }
-
-    public static Format formatter = new SimpleDateFormat("dd-M-yyyy hh:mm aaa");
 
     public static String getCurrentShortDate() {
         return new SimpleDateFormat("dd-MM-yyyy").format(new Date());
