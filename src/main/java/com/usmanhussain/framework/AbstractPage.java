@@ -46,6 +46,7 @@ public abstract class AbstractPage {
                 .ignoring(NoSuchElementException.class);
 
         return wait.until(new Function<WebDriver, WebElement>() {
+            @Override
             public WebElement apply(WebDriver webDriver) {
                 return getDriver.findElement(by);
             }
@@ -78,30 +79,22 @@ public abstract class AbstractPage {
         try {
             getDriver.executeScript(ON_BEFORE_UNLOAD);
             return wait.until(ExpectedConditions.presenceOfElementLocated(by));
-        } catch (UnhandledAlertException e) {
-            LOG.info(LOG_CONTEXT, e);
-            getDriver.switchTo().alert().dismiss();
-            return wait.until(ExpectedConditions.presenceOfElementLocated(by));
-        } catch (NoAlertPresentException e) {
+        } catch (UnhandledAlertException | NoAlertPresentException e) {
             LOG.info(LOG_CONTEXT, e);
             getDriver.switchTo().alert().dismiss();
             return wait.until(ExpectedConditions.presenceOfElementLocated(by));
         }
     }
 
-    public WebElement waitForElementPresent(final By by, final By sub_by) {
+    public WebElement waitForElementPresent(final By by, final By subBy) {
         Wait<WebDriver> wait = new WebDriverWait(getDriver, DRIVER_WAIT_TIME);
         try {
             getDriver.executeScript(ON_BEFORE_UNLOAD);
-            return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub_by));
-        } catch (UnhandledAlertException e) {
+            return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, subBy));
+        } catch (UnhandledAlertException | NoAlertPresentException e) {
             LOG.info(LOG_CONTEXT, e);
             getDriver.switchTo().alert().dismiss();
-            return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub_by));
-        } catch (NoAlertPresentException e) {
-            LOG.info(LOG_CONTEXT, e);
-            getDriver.switchTo().alert().dismiss();
-            return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub_by));
+            return wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(by, subBy));
         }
     }
 
@@ -355,7 +348,6 @@ public abstract class AbstractPage {
     }
 
     public void switchToPopUpWindow() {
-        String parentWindowHandler = getDriver.getWindowHandle();
         String subWindowHandler = null;
         Set<String> handles = getDriver.getWindowHandles();
         Iterator<String> iterator = handles.iterator();
