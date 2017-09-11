@@ -76,6 +76,7 @@
         <surefire.fork.count>1</surefire.fork.count>
         <features>src/test/resources/features</features>
         <testFailureIgnore>false</testFailureIgnore>
+        <generateHarReport>false</generateHarReport>
         <driverType>$driver</driverType>
         <jenkinsStyleReports>true</jenkinsStyleReports>
         <chromeDriverPath>${basedir}\src\main\resources\drivers\chromedriver.exe</chromeDriverPath>
