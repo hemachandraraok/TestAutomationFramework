@@ -55,14 +55,11 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
                 return new InternetExplorerDriver();
             case "chrome":
                 DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-                ChromeOptions driverOptions = new ChromeOptions();
-                driverOptions.addArguments("--start-maximized");
                 capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
-                capabilities.setCapability(ChromeOptions.CAPABILITY, driverOptions);
                 if (System.getProperty("generateHarReport").equalsIgnoreCase("true"))
                     return new ChromeDriver(capabilities);
                 else
-                    return new ChromeDriver(driverOptions);
+                    return new ChromeDriver();
             case "saucelabs":
                 if (getPlatform().contains("iOS") || getPlatform().contains("android")) {
                     return new SauceLabsDriver(getPlatform(), getBrowserName(), getAppiumVersion(), getDeviceName(), getDeviceOrientation(), getPlatformVersion());
