@@ -70,8 +70,8 @@
     </distributionManagement>
 
     <properties>
-        <sonar.projectName>Usman Hussain - com.usmanhussain Test Automation Framework</sonar.projectName>
-        <sonar.language>java</sonar.language>
+        <!--<sonar.projectName>Usman Hussain - com.usmanhussain Test Automation Framework</sonar.projectName>-->
+        <!--<sonar.language>java</sonar.language>-->
         <custom.folder>config</custom.folder>
         <surefire.fork.count>1</surefire.fork.count>
         <features>src/test/resources/features</features>
@@ -166,23 +166,29 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.3.0.603</version>
+            </plugin>
+
             <!--################################################-->
             <!--TO ONLY BE USED BY USMAN H HUSSAIN FOR DEPLOYING-->
             <!--################################################-->
 
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-gpg-plugin</artifactId>-->
-                <!--<version>1.5</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>sign-artifacts</id>-->
-                        <!--<phase>verify</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>sign</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-gpg-plugin</artifactId>-->
+            <!--<version>1.5</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>sign-artifacts</id>-->
+            <!--<phase>verify</phase>-->
+            <!--<goals>-->
+            <!--<goal>sign</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
         </plugins>
     </build>
