@@ -1,5 +1,7 @@
 package com.usmanhussain.framework;
 
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import net.lightbody.bmp.BrowserMobProxy;
 import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
@@ -22,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -60,6 +64,24 @@ public class WebDriverDiscovery extends EventFiringWebDriver {
                     return new ChromeDriver(capabilities);
                 else
                     return new ChromeDriver();
+            case "appium":
+                try {
+                    DesiredCapabilities appiumCapabilities = new DesiredCapabilities();
+                    String[] appiumCaps = System.getProperty("capabilities").split(",");
+                    for (String cap : appiumCaps) {
+                        appiumCapabilities.setCapability(cap.split(":")[0], cap.split(":")[1]);
+                    }
+                    if (appiumCapabilities.asMap().containsKey("browserName")) {
+                        return new RemoteWebDriver(new URL("http://127.0.0.1:4723/wd/hub"), appiumCapabilities);
+                    } else if (appiumCapabilities.getCapability("platformName").toString().equalsIgnoreCase("android")) {
+                        return new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), appiumCapabilities);
+                    } else {
+                        return new IOSDriver(new URL("http://127.0.0.1:4723/wd/hub"), appiumCapabilities);
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             case "saucelabs":
                 if (getPlatform().contains("iOS") || getPlatform().contains("android")) {
                     return new SauceLabsDriver(getPlatform(), getBrowserName(), getAppiumVersion(), getDeviceName(), getDeviceOrientation(), getPlatformVersion());
