@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -25,7 +26,7 @@
     <groupId>com.usmanhussain</groupId>
     <artifactId>UsmanHussainFramework</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.4</version>
+    <version>1.2.6</version>
     <name>com.usmanhussain:UsmanHussainFramework</name>
     <description>com.usmanhussain - Test Automation framework which allows tests to be written within a DevOps platform.
         Designed, Developed and Implemented by Mr Usman H Hussain
@@ -70,12 +71,13 @@
     </distributionManagement>
 
     <properties>
-        <sonar.projectName>Usman Hussain - com.usmanhussain Test Automation Framework</sonar.projectName>
-        <sonar.language>java</sonar.language>
+        <!--<sonar.projectName>Usman Hussain - com.usmanhussain Test Automation Framework</sonar.projectName>-->
+        <!--<sonar.language>java</sonar.language>-->
         <custom.folder>config</custom.folder>
         <surefire.fork.count>1</surefire.fork.count>
         <features>src/test/resources/features</features>
         <testFailureIgnore>false</testFailureIgnore>
+        <generateHarReport>false</generateHarReport>
         <driverType>$driver</driverType>
         <jenkinsStyleReports>true</jenkinsStyleReports>
         <chromeDriverPath>${basedir}\src\main\resources\drivers\chromedriver.exe</chromeDriverPath>
@@ -165,10 +167,15 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.3.0.603</version>
+            </plugin>
+
             <!--################################################-->
             <!--TO ONLY BE USED BY USMAN H HUSSAIN FOR DEPLOYING-->
             <!--################################################-->
-
             <!--<plugin>-->
                 <!--<groupId>org.apache.maven.plugins</groupId>-->
                 <!--<artifactId>maven-gpg-plugin</artifactId>-->
